@@ -12,7 +12,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="链接"
+        android:text="低版本"
         android:id="@+id/linebtn"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
@@ -22,7 +22,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="显示"
+        android:text="更新"
         android:id="@+id/displaybtn"
         android:layout_alignBottom="@+id/linebtn"
         android:layout_toEndOf="@+id/linebtn"
@@ -41,7 +41,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="断开"
+        android:text="不更新"
         android:id="@+id/Overbtn"
         android:layout_below="@+id/textView"
         android:layout_toEndOf="@+id/linebtn"
@@ -50,7 +50,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="双显"
+        android:text="高版本"
         android:id="@+id/doubleDisplay"
         android:layout_below="@+id/displaybtn"
         android:layout_alignStart="@+id/displaybtn"

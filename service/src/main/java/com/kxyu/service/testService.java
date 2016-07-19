@@ -22,20 +22,31 @@ public class testService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
 
   private final ItestInterface.Stub mBinder = new ItestInterface.Stub() {
 
-      public void appInfo (String pkName,int versonInfo){
-
+      public void appInfo (String pkName,int versionInfo) throws RemoteException {
+        if(versionInfo == 1){
+            client.toAcquireUpgradeInfoComplete("co","s","sss","sss","ss");
+        }else{
+            client.toAcquireUpgradeInfoComplete(null,null,null,null,null);
+        }
       }
 
       public void setBinder(IBinder mbinder) throws RemoteException {
 
           client = ItestInterfaceListener.Stub.asInterface(mbinder);
-          client.toAcquireUpgradeInfoComplete("co","s","sss","sss","ss");
+
+      }
+
+      public void isUpgradeAPP(boolean isF){
+          if(isF == true)
+          Log.i("kxyu"," 更新　:");
+          else
+              Log.i("kxyu"," 不更新　：");
       }
 
   };

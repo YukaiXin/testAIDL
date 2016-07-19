@@ -9,6 +9,5 @@ interface ItestInterfaceListener {
      * and return values in AIDL.
      */
 
-      void isUpgradeAPP(boolean isF);
       void  toAcquireUpgradeInfoComplete(String pkgName, String versionInfo, String rtNewApkMD5, String upPathAddress, String newApkAddress);
 }

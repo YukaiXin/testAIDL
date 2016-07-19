@@ -19,7 +19,7 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
     String mDisplaytx;
     TextView mDisplay ;
     TextView mDoubleDisplay;
-    private Context mContent;
+    private Context mContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,12 +28,14 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.linebtn).setOnClickListener(this);
         findViewById(R.id.displaybtn).setOnClickListener(this);
         findViewById(R.id.Overbtn).setOnClickListener(this);
+        findViewById(R.id.doubleDisplay).setOnClickListener(this);
         mDisplay = (TextView)findViewById(R.id.textView);
-        mContent = getApplicationContext();
+        mContext = getApplicationContext();
 
         mServiceHelper = new serviceHelper();
+        mServiceHelper.bindToService(mContext);
         mServiceHelper.setRequestUpgradeInfoListen(mRequestUpgradeInfoListen);
-        mServiceHelper.bindToServicce(mContent,"com.service","com.kxyu.service");
+
     }
 
 
@@ -43,43 +45,28 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
 
         switch (v.getId()){
             case R.id.linebtn:
-
-//                Intent mIntent = new Intent();
-//                mIntent.setAction("com.servce");
-////                mIntent.setPackage("com.kxyu.service");
-////                mContent.bindService(mIntent,serconn,Context.BIND_AUTO_CREATE);
+                mServiceHelper.appInfo("com.weibo.sina",1);
                 break;
             case R.id.displaybtn:
-//                try {
-////                    mDisplay.setText(remoteService.getString());
-//                } catch (RemoteException e) {
-//                    e.printStackTrace();
-//                }
+                mDisplay.setText("Upgrade");
+                mServiceHelper.isUpgradeAPP(true);
                 break;
             case R.id.doubleDisplay:
-
+                mDisplay.setText("not upgrade");
+                mServiceHelper.isUpgradeAPP(false);
                 break;
             case R.id.Overbtn:
-//                if(serconn!=null)
-//                {
-//                    //  serconn.onServiceDisconnected();
-//                 //   unbindService(serconn);
-//                }
+                mServiceHelper.appInfo("com.weibo.sina",2);
                 break;
         }
     }
 
-
-
     private serviceHelper.RequestUpgradeInfoListen mRequestUpgradeInfoListen = new serviceHelper.RequestUpgradeInfoListen() {
 
-        @Override
-        public void  isUpgradeAPP(boolean isF){
 
-        }
         @Override
         public void toAcquireUpgradeInfoComplete(UpgradeInfo upgradeInfo) {
-
+            mDisplay.setText(upgradeInfo.getPkgName()+"  "+upgradeInfo.getVersionInfo());
         }
 
 

@@ -20,7 +20,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter >
-                <action android:name="com.servce"/>
+                <action android:name="com.service"/>
             </intent-filter>
 
         </service>
