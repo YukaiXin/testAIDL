@@ -46,4 +46,13 @@
         android:layout_below="@+id/textView"
         android:layout_toEndOf="@+id/linebtn"
         android:layout_marginTop="42dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="双显"
+        android:id="@+id/doubleDisplay"
+        android:layout_below="@+id/displaybtn"
+        android:layout_alignStart="@+id/displaybtn"
+        android:layout_marginTop="17dp" />
 </RelativeLayout>

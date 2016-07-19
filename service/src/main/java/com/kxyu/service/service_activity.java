@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * Created by lewa on 16-7-13.
+ * Created by kxyu on 16-7-13.
  */
 public class service_activity extends Activity {
 
