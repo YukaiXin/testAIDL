@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.test.liine.entity.UpgradeInfo;
 import com.test.liine.serviceHelper;
 
 public class CilentActivity extends AppCompatActivity implements View.OnClickListener{
@@ -34,18 +33,27 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
 
         mServiceHelper = new serviceHelper();
         mServiceHelper.bindToService(mContext);
-        mServiceHelper.setRequestUpgradeInfoListen(mRequestUpgradeInfoListen);
+        mServiceHelper.setRequestUpgradeInfoListen(new serviceHelper.RequestUpgradeInfoListen() {
+            @Override
+            public void toAccquireUpgradeError(int mErrorMsg) {
 
+            }
+
+            @Override
+            public void toAcquireUpgradeProgress(int mUpgradeProgress) {
+
+            }
+        });
+
+        mServiceHelper.getAppInfo("com.weibo.sina",1);
     }
 
-
     @Override
-
     public void onClick(View v) {
 
         switch (v.getId()){
             case R.id.linebtn:
-                mServiceHelper.appInfo("com.weibo.sina",1);
+                mServiceHelper.getAppInfo("com.weibo.sina",1);
                 break;
             case R.id.displaybtn:
                 mDisplay.setText("Upgrade");
@@ -56,20 +64,9 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
                 mServiceHelper.isUpgradeAPP(false);
                 break;
             case R.id.Overbtn:
-                mServiceHelper.appInfo("com.weibo.sina",2);
+                mServiceHelper.getAppInfo("com.weibo.sina",2);
                 break;
         }
     }
-
-    private serviceHelper.RequestUpgradeInfoListen mRequestUpgradeInfoListen = new serviceHelper.RequestUpgradeInfoListen() {
-
-
-        @Override
-        public void toAcquireUpgradeInfoComplete(UpgradeInfo upgradeInfo) {
-            mDisplay.setText(upgradeInfo.getPkgName()+"  "+upgradeInfo.getVersionInfo());
-        }
-
-
-    };
 
 }

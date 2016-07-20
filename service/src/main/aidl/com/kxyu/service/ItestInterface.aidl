@@ -11,7 +11,7 @@ interface ItestInterface {
 //    void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
 //            double aDouble, String aString);
 
-       void appInfo (String pkName,int versionInfo);
+       void getAppInfo (String pkName,int versionInfo);
 
        void isUpgradeAPP(boolean isF);
 

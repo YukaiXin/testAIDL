@@ -28,17 +28,17 @@ public class testService extends Service {
 
   private final ItestInterface.Stub mBinder = new ItestInterface.Stub() {
 
-      public void appInfo (String pkName,int versionInfo) throws RemoteException {
+      public void getAppInfo (String pkName,int versionInfo) throws RemoteException {
         if(versionInfo == 1){
-            client.toAcquireUpgradeInfoComplete("co","s","sss","sss","ss");
+//            client.
         }else{
-            client.toAcquireUpgradeInfoComplete(null,null,null,null,null);
+            client.toAcquireUpgradeProgress(2);
         }
       }
 
       public void setBinder(IBinder mbinder) throws RemoteException {
 
-          client = ItestInterfaceListener.Stub.asInterface(mbinder);
+         client = ItestInterfaceListener.Stub.asInterface(mbinder);
 
       }
 

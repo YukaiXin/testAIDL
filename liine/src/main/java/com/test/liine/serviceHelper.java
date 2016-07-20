@@ -6,13 +6,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.kxyu.service.ItestInterface;
 import com.kxyu.service.ItestInterfaceListener;
-import com.test.liine.entity.UpgradeInfo;
-
-import java.util.HashMap;
 
 
 /**
@@ -20,41 +16,37 @@ import java.util.HashMap;
  */
 public class serviceHelper {
 
-    private HashMap<Context,ServiceConnection> sConnectionMap;
     private Context mContext;
     private RequestUpgradeInfoListen mRequestUpgradeInfoListen;
 
+
     public interface RequestUpgradeInfoListen {
-        public void  toAcquireUpgradeInfoComplete(UpgradeInfo upgradeInfo);
+        public void  toAccquireUpgradeError(int mErrorMsg);
+        public void  toAcquireUpgradeProgress(int mUpgradeProgress);
     }
 
     private ItestInterface remoteService;
-    private IBinder myBinder;
 
 
     public void bindToService(Context ctx){
         mContext = ctx;
         Intent mIntent = new Intent();
 
-
-//     //   ContextWrapper cw = new ContextWrapper(realActivity);
-//      //  Intent mIntent = new Intent();
-//        mIntent.setClassName("", "com.kxyu.service.testService");
-//        cw.startService(mIntent);
-
-        mIntent.setAction("com.service");
-        mIntent.setPackage("com.kxyu.service");
-        ctx.bindService(mIntent,mServiceConnection,Context.BIND_AUTO_CREATE);
-        Log.i("kxyu","ss");
+        mIntent.setAction(Constants.SERVICE_ACTION);
+        mIntent.setPackage(Constants.SERVICE_PACKAGE_NAME);
+        if(ctx.bindService(mIntent,mServiceConnection,Context.BIND_AUTO_CREATE) == false){
+            ctx.bindService(mIntent,mServiceConnection,Context.BIND_AUTO_CREATE);
+        }
     }
 
     private final ItestInterfaceListener.Stub mBinder = new ItestInterfaceListener.Stub() {
 
-        @Override
-        public void toAcquireUpgradeInfoComplete(String pkgName, String versionInfo, String rtNewApkMD5, String upPathAddress, String newApkAddress) throws RemoteException {
+        public void  toAccquireUpgradeError(int mErrorMsg){
+            mRequestUpgradeInfoListen.toAccquireUpgradeError(mErrorMsg);
+        }
 
-            UpgradeInfo mUpgradeInfo = new UpgradeInfo(pkgName,versionInfo,rtNewApkMD5,upPathAddress,newApkAddress);
-            mRequestUpgradeInfoListen.toAcquireUpgradeInfoComplete(mUpgradeInfo);
+        public void  toAcquireUpgradeProgress(int mUpgradeProgress){
+            mRequestUpgradeInfoListen.toAcquireUpgradeProgress(mUpgradeProgress);
         }
     };
 
@@ -63,13 +55,13 @@ public class serviceHelper {
         ctx.unbindService(mServiceConnection);
     }
 
-    public  void appInfo(String mPkgName, int mVersionInfo) {
+    public  void getAppInfo(String mPkgName, int mVersionInfo) {
         if(remoteService == null){
             bindToService(mContext);
         }
 
         try {
-            remoteService.appInfo(mPkgName,mVersionInfo);
+            remoteService.getAppInfo(mPkgName,mVersionInfo);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -81,6 +73,10 @@ public class serviceHelper {
 
     public void isUpgradeAPP(boolean isF)
     {
+        if(remoteService == null){
+            bindToService(mContext);
+        }
+
         try {
             remoteService.isUpgradeAPP(isF);
         } catch (RemoteException e) {
@@ -89,19 +85,16 @@ public class serviceHelper {
     }
 
 
-
     ServiceConnection mServiceConnection = new ServiceConnection(){
-
-        @Override
+               @Override
         public void onServiceDisconnected(ComponentName name) {
             remoteService = null;
-
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             remoteService = ItestInterface.Stub.asInterface(service);
-            Log.i("kxyu","  seccusss !!!!");
+
             try {
                 remoteService.setBinder(mBinder);
             } catch (RemoteException e) {
