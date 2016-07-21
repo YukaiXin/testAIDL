@@ -3,10 +3,13 @@ package com.kxyu.testaidl;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kxyu.service.ItestInterface;
 import com.test.liine.serviceHelper;
 
 public class CilentActivity extends AppCompatActivity implements View.OnClickListener{
@@ -32,7 +35,6 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
         mContext = getApplicationContext();
 
         mServiceHelper = new serviceHelper();
-        mServiceHelper.bindToService(mContext);
         mServiceHelper.setRequestUpgradeInfoListen(new serviceHelper.RequestUpgradeInfoListen() {
             @Override
             public void toAccquireUpgradeError(int mErrorMsg) {
@@ -41,11 +43,25 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void toAcquireUpgradeProgress(int mUpgradeProgress) {
-
+                Log.i("kxyu","toAcquireUpgradeProgress--------"+mUpgradeProgress);
+                mDisplay.setText(String.valueOf(mUpgradeProgress));
             }
-        });
 
-        mServiceHelper.getAppInfo("com.weibo.sina",1);
+
+        });
+        mServiceHelper.bindToService(mContext, new serviceHelper.ServiceConnectionListen() {
+            @Override
+
+            public void ConnectionSeccuss(ItestInterface remoteService) {
+                try {
+                    remoteService.getAppInfo("ads", 1);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            });
+
+
     }
 
     @Override
@@ -53,18 +69,18 @@ public class CilentActivity extends AppCompatActivity implements View.OnClickLis
 
         switch (v.getId()){
             case R.id.linebtn:
-                mServiceHelper.getAppInfo("com.weibo.sina",1);
+               // mServiceHelper.getAppInfo("com.weibo.sina",1);
                 break;
             case R.id.displaybtn:
                 mDisplay.setText("Upgrade");
-                mServiceHelper.isUpgradeAPP(true);
+              //  mServiceHelper.isUpgradeAPP(true);
                 break;
             case R.id.doubleDisplay:
                 mDisplay.setText("not upgrade");
-                mServiceHelper.isUpgradeAPP(false);
+             //   mServiceHelper.isUpgradeAPP(false);
                 break;
             case R.id.Overbtn:
-                mServiceHelper.getAppInfo("com.weibo.sina",2);
+            //    mServiceHelper.getAppInfo("com.weibo.sina",2);
                 break;
         }
     }

@@ -30,7 +30,8 @@ public class testService extends Service {
 
       public void getAppInfo (String pkName,int versionInfo) throws RemoteException {
         if(versionInfo == 1){
-//            client.
+            Log.i("kxyu","1000000000");
+            client.toAcquireUpgradeProgress(100);
         }else{
             client.toAcquireUpgradeProgress(2);
         }

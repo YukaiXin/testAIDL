@@ -5,6 +5,6 @@ package com.test.liine;
  */
 public class Constants {
 
-    public static final String SERVICE_ACTION = "StartService";
+    public static final String SERVICE_ACTION = "com.service";
     public static final String SERVICE_PACKAGE_NAME = "com.kxyu.service";
 }

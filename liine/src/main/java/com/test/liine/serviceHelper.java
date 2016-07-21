@@ -17,18 +17,21 @@ import com.kxyu.service.ItestInterfaceListener;
 public class serviceHelper {
 
     private Context mContext;
+    private ServiceConnectionListen mServiceConnectionListen;
     private RequestUpgradeInfoListen mRequestUpgradeInfoListen;
-
 
     public interface RequestUpgradeInfoListen {
         public void  toAccquireUpgradeError(int mErrorMsg);
         public void  toAcquireUpgradeProgress(int mUpgradeProgress);
     }
 
-    private ItestInterface remoteService;
+    public interface ServiceConnectionListen {
+        public void  ConnectionSeccuss(ItestInterface remoteService) ;
+    }
 
+    private  ItestInterface remoteService;
 
-    public void bindToService(Context ctx){
+    public void bindToService(Context ctx,ServiceConnectionListen serviceConnectionListen){
         mContext = ctx;
         Intent mIntent = new Intent();
 
@@ -37,6 +40,15 @@ public class serviceHelper {
         if(ctx.bindService(mIntent,mServiceConnection,Context.BIND_AUTO_CREATE) == false){
             ctx.bindService(mIntent,mServiceConnection,Context.BIND_AUTO_CREATE);
         }
+        this.mServiceConnectionListen = serviceConnectionListen;
+    }
+
+    private void bindToService(Context ctx){
+        Intent mIntent = new Intent();
+
+        mIntent.setAction(Constants.SERVICE_ACTION);
+        mIntent.setPackage(Constants.SERVICE_PACKAGE_NAME);
+        ctx.bindService(mIntent,mServiceConnection,Context.BIND_AUTO_CREATE);
     }
 
     private final ItestInterfaceListener.Stub mBinder = new ItestInterfaceListener.Stub() {
@@ -56,9 +68,8 @@ public class serviceHelper {
     }
 
     public  void getAppInfo(String mPkgName, int mVersionInfo) {
-        if(remoteService == null){
-            bindToService(mContext);
-        }
+
+        if(remoteService == null) bindToService(mContext);
 
         try {
             remoteService.getAppInfo(mPkgName,mVersionInfo);
@@ -73,9 +84,7 @@ public class serviceHelper {
 
     public void isUpgradeAPP(boolean isF)
     {
-        if(remoteService == null){
-            bindToService(mContext);
-        }
+        if(remoteService == null) bindToService(mContext);
 
         try {
             remoteService.isUpgradeAPP(isF);
@@ -83,7 +92,6 @@ public class serviceHelper {
             e.printStackTrace();
         }
     }
-
 
     ServiceConnection mServiceConnection = new ServiceConnection(){
                @Override
@@ -100,6 +108,9 @@ public class serviceHelper {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+
+           mServiceConnectionListen.ConnectionSeccuss(remoteService);
         }
     };
+
 }
